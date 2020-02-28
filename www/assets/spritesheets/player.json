@@ -1,0 +1,294 @@
+{
+    "frames": {
+        "player-0": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-1": {
+            "frame": {
+                "x": 68,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-10": {
+            "frame": {
+                "x": 0,
+                "y": 68,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-11": {
+            "frame": {
+                "x": 68,
+                "y": 68,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-12": {
+            "frame": {
+                "x": 136,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-13": {
+            "frame": {
+                "x": 136,
+                "y": 68,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-2": {
+            "frame": {
+                "x": 0,
+                "y": 136,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-3": {
+            "frame": {
+                "x": 68,
+                "y": 136,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-4": {
+            "frame": {
+                "x": 136,
+                "y": 136,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-5": {
+            "frame": {
+                "x": 204,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-6": {
+            "frame": {
+                "x": 204,
+                "y": 68,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-7": {
+            "frame": {
+                "x": 204,
+                "y": 136,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-8": {
+            "frame": {
+                "x": 0,
+                "y": 204,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        },
+        "player-9": {
+            "frame": {
+                "x": 68,
+                "y": 204,
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            }
+        }
+    },
+    "meta": {
+        "app": "https://github.com/Ensighten/spritesmith",
+        "image": "player.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 268,
+            "h": 268
+        },
+        "scale": 1
+    }
+}

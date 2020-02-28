@@ -1,0 +1,37 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc -p .",
+    "tslint": "tslint -p .",
+    "typedoc": "typedoc -p .",
+    "webpack": "webpack",
+    "server": "webpack-dev-server",
+    "build": "webpack --mode production"
+  },
+  "author": "Smith, inwan",
+  "license": "MIT",
+  "dependencies": {
+    "@pixi/filter-pixelate": "^3.0.3",
+    "detect-browser": "^4.8.0",
+    "pixi.js": "^5.2.0",
+    "webfontloader": "^1.6.28"
+  },
+  "devDependencies": {
+    "@types/pixi.js": "^5.0.0",
+    "ts-loader": "^6.2.1",
+    "tslint": "^5.20.1",
+    "tslint-config-airbnb": "^5.11.2",
+    "typedoc": "^0.15.6",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "description": ""
+}

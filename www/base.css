@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'MisakiGothic';
+  src: url('assets/font/MisakiGothic.ttf')format('truetype');
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+body { 
+  text-align: center;
+} 

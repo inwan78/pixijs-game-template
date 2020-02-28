@@ -1,0 +1,43 @@
+[
+  {
+    "spriteName" :"player",
+    "hitFrame": 4,
+    "types": {
+      "wait": {
+        "updateDuration": 12,
+        "frames": [
+          "player-1"
+        ]
+      },
+      "walk": {
+        "updateDuration": 10,
+        "frames": [
+          "player-0",
+          "player-1",
+          "player-2",
+          "player-1"
+        ]
+      },
+      "jump": {
+        "updateDuration": 10,
+        "frames": [
+          "player-4",
+          "player-4"
+        ]
+      }
+    }
+  },
+  {
+    "spriteName" :"map2",
+    "hitFrame": 4,
+    "types": {
+      "test": {
+        "updateDuration": 100,
+        "frames": [
+          "map2-3",
+          "map2-0"        
+        ]
+      }
+    }
+  }
+]
