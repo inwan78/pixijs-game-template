@@ -18,7 +18,7 @@ export default class InputManager {
   public static keyStatus = Object.freeze({
     HOLD: 2,
     DOWN: 1,
-    UN_DOWN: 0,
+    UNDOWN: 0,
     RELEASE: -1,
   });
   //キーの状態管理用変数
@@ -133,7 +133,7 @@ export default class InputManager {
         this.input.keysPrev[key] = false;
         return this.keyStatus.RELEASE;//ボタンを離した時
       }
-      return this.keyStatus.UN_DOWN;//押されていない
+      return this.keyStatus.UNDOWN;//押されていない
     }
   }
 }
