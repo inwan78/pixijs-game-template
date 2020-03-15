@@ -20,7 +20,12 @@ const Resource = Object.freeze({
   AnimationSpriteName: {
     Player: "player",
   },
+  MapData: {//jsonファイルならなんでもいけると思う
+    Stage1: 'map/map-test2.json'
+  },
   Image: {
+    Enemy: 'image/enemy.png',
+    Map: 'image/test-map.png'
   },
   Sound: {
     //Pause: 'audio/pause.mp3',
@@ -33,25 +38,14 @@ const Resource = Object.freeze({
   /**
    * アニメーション種別の識別子を有するオブジェクト
    */
-  AnimationTypes: {
-    Player: Object.freeze({
-      WAIT: 'wait',
-      WALK: 'walk',
-      ATTACK: 'attack',
-      DAMAGE: 'damage',
-    }),
-  },
-  /**
-   * スプライトシートの最大フレーム数を返す関数
-   */
-  MaxFrameIndex: (resourceKey: string): number => {
-    const json = GameManager.instance.game.loader.resources[resourceKey];
-    if (!json || !json.data || !json.data.frames) {
-      return -1;
-    }
-    return Object.keys(json.data.frames).length;
-  },
-
+  AnimationTypes: Object.freeze({
+    WAIT: 'wait',
+    WALK: 'walk',
+    ATTACK: 'attack',
+    JUMP: 'jump',
+    DAMAGE: 'damage',
+  }),
+  
   /**
    * フォントの設定
    */

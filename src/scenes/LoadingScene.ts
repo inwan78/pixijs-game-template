@@ -148,6 +148,12 @@ export default class LoadingScene extends Scene {
       }
       additionalAssets.push(Resource.SpriteAnimation(data));
     } 
+    //マップデータjson追加
+    if(Object.keys(Resource.MapData).length > 0){
+      for(let key in Resource.MapData) {
+        additionalAssets.push(Resource.MapData[key]);
+      }
+    }
     return additionalAssets;
   }
   
