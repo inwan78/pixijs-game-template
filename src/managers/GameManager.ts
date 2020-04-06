@@ -27,7 +27,8 @@ export default class GameManager {
   public isGameover: boolean = false;
   public bgmName: string;//演奏中のBGMの名前の保存用
   public localStorage: any;//ローカルストレージ
-  
+  public rankingData: {rank?: number, all?: number} | [{name?: string, score?: number, date?: string}];
+
   /**
    * コンストラクタ
    * PIXI.Applicationインスタンスはユーザー任意のものを使用する
@@ -139,8 +140,10 @@ export default class GameManager {
   public static resizeCanvas(): void {
     const game = GameManager.instance.game;
     const renderer = game.renderer;
+
     let canvasWidth;
     let canvasHeight;
+
     const rendererHeightRatio = renderer.height / renderer.width;
     const windowHeightRatio = window.innerHeight / window.innerWidth;
 
@@ -152,8 +155,11 @@ export default class GameManager {
       canvasWidth = window.innerHeight * (renderer.width / renderer.height);
       canvasHeight = window.innerHeight;
     }
+
     game.view.style.width  = `${canvasWidth}px`;
     game.view.style.height = `${canvasHeight}px`;
+    Config.Display.Width = canvasWidth;
+    Config.Display.Height = canvasHeight
   }
   /**
    * 動作環境に応じて適切ならフルスクリーン設定をする

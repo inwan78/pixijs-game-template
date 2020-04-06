@@ -4,8 +4,9 @@ import Transition from '../interfaces/Transition';
 import Immediate from './transition/immediate';
 import GameManager from '../managers/GameManager';
 import SoundManager from '../managers/SoundManager';
+import * as PixiExt from '../PixiExtends';
 
-export default abstract class Scene extends PIXI.Container {
+export default abstract class Scene extends PixiExt.Container {
   protected transitionIn: Transition = new Immediate();
   protected transitionOut: Transition = new Immediate();
   protected objectsToUpdate: UpdateObject[] = [];
@@ -28,6 +29,7 @@ export default abstract class Scene extends PIXI.Container {
       obj.update(delta);
       nextObjectsToUpdate.push(obj);
     }
+
     this.objectsToUpdate = nextObjectsToUpdate;
   }
 

@@ -12,7 +12,7 @@ export default class InputManager {
     DOWN: 4,
     DOWN_LEFT: 12,
     LEFT: 8,
-    UP_LEFT: 9 
+    UP_LEFT: 9
   });
   //キーの状態管理定数
   public static keyStatus = Object.freeze({
