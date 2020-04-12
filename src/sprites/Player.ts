@@ -14,6 +14,7 @@ export default class Player extends PixiExt.AnimationSprite {
     this.anchor.set(0.5, 0.5);
     this.x = 250; 
     this.y = 250;
+    this.position.set(this.x, this.y); 
   }
   public update(_dt: number){
     super.update(_dt);

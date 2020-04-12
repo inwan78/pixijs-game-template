@@ -13,6 +13,7 @@ export default class TitleScene extends Scene {
   private pixelateFilter: PixelateFilter;
   private isTransitionOutStart: boolean = false;
 
+  
   constructor() {
     super();
     this.transitionOut = new Fade(0.0, 1.0, 0.02);   
@@ -34,14 +35,14 @@ export default class TitleScene extends Scene {
       GMI.hiscore = GMI.localStorage.data.hiscore;
     }
 
-    const resources = GMI.game.loader.resources as any;;
+    const resources = GMI.game.loader.resources as any;
     this.interactive = true;
 
     const bg = new PIXI.Sprite();
     bg.width = Config.Screen.Width;
     bg.height = Config.Screen.Height;
     this.addChild(bg);
-    
+
     const title = new PIXI.Text('タイトル', new PIXI.TextStyle({
       fontFamily: 'sans-serif',
       fontSize: 120,
@@ -54,6 +55,7 @@ export default class TitleScene extends Scene {
     title.anchor.set(0.5, 0.5);
     title.position.set(Config.Screen.Width * 0.5, Config.Screen.Height * 0.3);
     this.addChild(title);
+
     
     this.text = new PIXI.Text('TOUCH TO START', new PIXI.TextStyle({
       fontFamily: 'MisakiGothic',
@@ -75,6 +77,7 @@ export default class TitleScene extends Scene {
         this.filters = [this.pixelateFilter];
 
         this.beginTransitionOut(() => GameManager.loadScene(new MainScene()));
+        
       }
     });
   }

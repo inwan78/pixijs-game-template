@@ -36,7 +36,7 @@ export default class PauseScene extends Scene {
     }
   }
   private resumeGame() {
-    //this.resumeBgm();
+    this.resumeBgm();
     GameManager.popScene();
   }
 }

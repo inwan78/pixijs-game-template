@@ -28,9 +28,12 @@ const Resource = Object.freeze({
     Map: 'image/test-map.png'
   },
   Sound: {
-    //Pause: 'audio/pause.mp3',
-    //Ok: 'audio/ok.mp3',
-    //Cancel: 'audio/cancel.mp3',
+    /*
+    Pause: 'audio/ok.mp3',
+    Ok: 'audio/ok.mp3',
+    Cancel: 'audio/cancel.mp3',
+    Select: 'audio/select.mp3',
+    */
   },
   Bgm: {
     //Main: 'audio/bgm.mp3',
@@ -45,7 +48,17 @@ const Resource = Object.freeze({
     JUMP: 'jump',
     DAMAGE: 'damage',
   }),
-  
+  /**
+   * スプライトシートの最大フレーム数を返す関数
+   */
+  MaxFrameIndex: (resourceKey: string): number => {
+    const json = GameManager.instance.game.loader.resources[resourceKey];
+    if (!json || !json.data || !json.data.frames) {
+      return -1;
+    }
+    return Object.keys(json.data.frames).length;
+  },
+
   /**
    * フォントの設定
    */

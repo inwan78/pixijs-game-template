@@ -4,7 +4,6 @@ export type SpriteAnimationTypeIndex = 'wait' | 'walk' | 'attack' | 'jump' | 'da
  */
 export default interface SpriteAnimationMaster {
   spriteName: string;
-  hitFrame: number;
   types: {
     [key in SpriteAnimationTypeIndex]: {
       updateDuration: number;

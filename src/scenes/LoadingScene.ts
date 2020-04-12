@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import Config from '../Config';
 import GameManager from '../managers/GameManager';
 import SoundManager from '../managers/SoundManager';
 import Resource from '../Resource';
@@ -8,11 +7,21 @@ import TitleScene from './TitleScene';
 
 export default class LoadingScene extends Scene {
   private text: PIXI.Text;
+  private borders: PIXI.Graphics;
+  private bar: PIXI.Graphics;
   private percentage: PIXI.Text;
+ 
+  private bordersWidth: number;
+  private bordersHeight: number;
+  private bodersLineHeight: number;
+  private barX: number;
+  private barY: number;
+  
 
   constructor(){
     super();
 
+    const renderer = GameManager.instance.game.renderer;
     this.text = new PIXI.Text("NOW LOADING", new PIXI.TextStyle({
       fontFamily: 'sans-serif',
       fontSize: 32,
@@ -20,7 +29,7 @@ export default class LoadingScene extends Scene {
       padding: 12
     }));
     this.text.anchor.set(0, 1);
-    this.text.position.set(Config.Screen.Width * 0.1, Config.Screen.Height * 0.48);
+    this.text.position.set(renderer.width*0.1, renderer.height*0.48);
     this.addChild(this.text);
 
     this.percentage = new PIXI.Text("0%", new PIXI.TextStyle({
@@ -30,8 +39,36 @@ export default class LoadingScene extends Scene {
       padding: 12
     }));
     this.percentage.anchor.set(1, 1);
-    this.percentage.position.set(Config.Screen.Width * 0.9, Config.Screen.Height * 0.48);
+    this.percentage.position.set(renderer.width*0.9, renderer.height*0.48);
     this.addChild(this.percentage);
+
+    
+    this.bordersWidth = renderer.width * 0.8;
+    this.bordersHeight = renderer.height * 0.02;
+    this.bodersLineHeight = this.bordersHeight * 0.2;
+    this.barX = renderer.width * 0.1;
+    this.barY = renderer.height * 0.5;
+    
+    //枠を描く
+    this.borders = new PIXI.Graphics();
+    // lineStyle(width, color , alpha透明度)
+    this.borders.lineStyle(this.bodersLineHeight, 0xFFFFFF, 1);
+    this.borders.beginFill(0x000000);
+    // drawRect(x, y, width, height)
+    this.borders.drawRect(this.barX, this.barY, this.bordersWidth, this.bordersHeight);
+    this.borders.endFill();
+    this.addChild(this.borders);
+
+    //枠内を塗りつぶすバー
+    this.bar = new PIXI.Graphics();
+    // lineStyle(width, color , alpha透明度)
+    this.bar.lineStyle(this.bodersLineHeight, 0xFFFFFF, 1);
+    this.bar.beginFill(0xFFFFFF);
+    // drawRect(x, y, width, height)
+    this.bar.drawRect(this.barX+this.bodersLineHeight, this.barY+this.bodersLineHeight, this.bodersLineHeight, this.bordersHeight-this.bodersLineHeight*2);
+    this.bar.endFill();
+    this.addChild(this.bar);
+
 
     //リソースロード
     this.beginLoadResource();
@@ -125,6 +162,7 @@ export default class LoadingScene extends Scene {
   }
   /**
    * loadInitialResource 完了時のコールバックメソッド
+   * （読み込むjsonファイルを登録してるっぽい）
    */
   protected onInitialResourceLoaded(): (LoaderAddParam | string)[] {
     const additionalAssets = [];
@@ -136,7 +174,7 @@ export default class LoadingScene extends Scene {
         data.push(Resource.SpriteSheetName[key]);
       }
     }
-    //画像情報を追加
+    //スプライトのjson追加
     for(let i = 0; i < data.length; i++){
       additionalAssets.push(Resource.Sprite(data[i]));//
     }
@@ -147,7 +185,7 @@ export default class LoadingScene extends Scene {
         data.push(Resource.SpriteSheetName[key]);
       }
       additionalAssets.push(Resource.SpriteAnimation(data));
-    } 
+    }
     //マップデータjson追加
     if(Object.keys(Resource.MapData).length > 0){
       for(let key in Resource.MapData) {
@@ -159,6 +197,7 @@ export default class LoadingScene extends Scene {
   
   /**
    * onInitialResourceLoaded で発生した追加のリソースをロードする
+   * (jsonファイルを読み込んでるっぽい)
    */
   protected loadAdditionalResource(assets: (string | LoaderAddParam)[], onLoaded: () => void) {
     GameManager.instance.game.loader.add(this.filterLoadedAssets(assets)).load(() => onLoaded());
@@ -187,6 +226,7 @@ export default class LoadingScene extends Scene {
       }
       GameManager.instance.spriteAnimationData = spriteDatas;//ゲームマネージャーに保存
     }
+
     //サウンドの準備
     if(Object.keys(Resource.Sound).length > 0){
       for(let key in Resource.Sound) {
@@ -221,5 +261,11 @@ export default class LoadingScene extends Scene {
         this.count = 0;
       }
     }
+    
+    this.bar.lineStyle(this.bodersLineHeight, 0xFFFFFF, 1);
+    this.bar.beginFill(0xFFFFFF);
+    this.bar.drawRect(this.barX+this.bodersLineHeight, this.barY+this.bodersLineHeight, this.bordersWidth*GameManager.instance.game.loader.progress*0.01, this.bordersHeight-this.bodersLineHeight*2);
+    this.bar.endFill();
+    
   }
 }

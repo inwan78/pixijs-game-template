@@ -1,36 +1,41 @@
 /***************************************************************************
- * pixi拡張クラス
+ * ゲーム開発用にPixiのクラスを拡張
+ * UpdateObjectを実装してupdate()を使えるようにする
  ***************************************************************************/
 import * as PIXI from 'pixi.js';
 import UpdateObject from './interfaces/UpdateObject';
 import SpriteAnimationMaster, {SpriteAnimationTypeIndex} from './interfaces/SpriteAnimationMaster';
-
-/***************************************************************************
- * スプライトシートを使ったアニメーション制御付きスプライト
- ***************************************************************************/
-export class AnimationSprite extends PIXI.Sprite implements UpdateObject{
-  public animationType!: string;
+/*********************************************
+ * PixiのContainerクラスへUpdateObject実装
+ *********************************************/
+export class Container extends PIXI.Container implements UpdateObject {
   protected destroyed: boolean = false;
-  protected animationMaster!: SpriteAnimationMaster;
-  protected animationFrameId: number = 0;
+  protected objectsToUpdate: UpdateObject[] = [];
   protected elapsedFrameCount: number = 0;
-
   constructor(){
     super();
   }
-  /**
-   * アニメーション再生をリセットする
-   */
-  public resetAnimation(): void {
-    this.elapsedFrameCount = 0;
-    this.animationFrameId = 0;
+  //メインループで更新処理を行うべきオブジェクトの登録
+  protected registerUpdatingObject(object: UpdateObject): void {
+    this.objectsToUpdate.push(object);
   }
-   /**
-   * UpdateObject インターフェース実装
-   * requestAnimationFrame 毎のアップデート処理
-   */
-  public update(_dt: number): void {
-    this.updateAnimation();
+  //更新処理を行うべきオブジェクトを更新する
+  protected updateRegisteredObjects(delta: number): void {
+    const nextObjectsToUpdate = [];
+    for (let i = 0; i < this.objectsToUpdate.length; i++) {
+      const obj = this.objectsToUpdate[i];
+      if (!obj || obj.isDestroyed()) {
+        continue;
+      }
+      obj.update(delta);
+      nextObjectsToUpdate.push(obj);
+    }
+    this.objectsToUpdate = nextObjectsToUpdate;
+  }
+  //Updateする子要素を追加
+  public addUpdateChild(obj: PIXI.DisplayObject & UpdateObject): void {
+    this.addChild(obj);
+    this.registerUpdatingObject(obj);
   }
   public isDestroyed(): boolean {
     return this.destroyed;
@@ -39,7 +44,72 @@ export class AnimationSprite extends PIXI.Sprite implements UpdateObject{
     super.destroy();
     this.destroyed = true;
   }
- 
+  public update(dt: number){
+    this.updateRegisteredObjects(dt);
+    this.elapsedFrameCount++;
+  }
+}
+/***************************************************************************
+ * スプライトシートを使ったアニメーション制御付きスプライト
+ ***************************************************************************/
+export class AnimationSprite extends PIXI.Sprite implements UpdateObject {
+  public animationType!: string;
+  protected destroyed: boolean = false;
+  protected elapsedFrameCount: number = 0;
+  protected animationFrameCount: number = 0;
+  protected animationMaster!: SpriteAnimationMaster;
+  protected animationFrameId: number = 0;
+  protected objectsToUpdate: UpdateObject[] = [];
+  constructor(){
+    super();
+  }
+  //メインループで更新処理を行うべきオブジェクトの登録
+  protected registerUpdatingObject(object: UpdateObject): void {
+    this.objectsToUpdate.push(object);
+  }
+  
+  //更新処理を行うべきオブジェクトを更新する
+  protected updateRegisteredObjects(delta: number): void {
+    const nextObjectsToUpdate = [];
+    for (let i = 0; i < this.objectsToUpdate.length; i++) {
+      const obj = this.objectsToUpdate[i];
+      if (!obj || obj.isDestroyed()) {
+        continue;
+      }
+      obj.update(delta);
+      nextObjectsToUpdate.push(obj);
+    }
+    this.objectsToUpdate = nextObjectsToUpdate;
+  }
+  /**
+   * アニメーション再生をリセットする
+   */
+  public resetAnimation(): void {
+    this.animationFrameCount = 0;
+    this.animationFrameId = 0;
+  }
+   /**
+   * UpdateObject インターフェース実装
+   * requestAnimationFrame 毎のアップデート処理
+   */
+  public update(dt: number): void {
+    this.updateRegisteredObjects(dt);
+    this.elapsedFrameCount++;
+    this.updateAnimation();
+    
+  }
+  public isDestroyed(): boolean {
+    return this.destroyed;
+  }
+  public destroy(): void {
+    super.destroy();
+    this.destroyed = true;
+  }
+  //Updateする子要素を追加
+  public addUpdateChild(obj: PIXI.DisplayObject & UpdateObject): void {
+    this.addChild(obj);
+    this.registerUpdatingObject(obj);
+  }
   public updateAnimation(): void {
     const index = this.animationType as SpriteAnimationTypeIndex;
     const animation = this.animationMaster.types[index];
@@ -47,7 +117,7 @@ export class AnimationSprite extends PIXI.Sprite implements UpdateObject{
       return;
     }
     //フレーム数がスプライトシート更新頻度に達しているかチェック
-    if((this.elapsedFrameCount % animation.updateDuration) === 0) {
+    if((this.animationFrameCount % animation.updateDuration) === 0) {
       //最終フレームならアニメーションをリセット
       if(this.isAnimationLastFrameTime()){
         this.resetAnimation();
@@ -56,7 +126,7 @@ export class AnimationSprite extends PIXI.Sprite implements UpdateObject{
       this.texture = PIXI.utils.TextureCache[cacheKey];
       this.animationFrameId++;
     }
-    this.elapsedFrameCount++;
+    this.animationFrameCount++;
   }
  
   /**
@@ -71,7 +141,7 @@ export class AnimationSprite extends PIXI.Sprite implements UpdateObject{
     const duration = animation.updateDuration;
     const lastId = animation.frames.length;
     const maxFrameTime = duration * lastId;
-    return this.elapsedFrameCount === maxFrameTime;
+    return this.animationFrameCount === maxFrameTime;
   }
   /**
    * アニメーションを切り替える
@@ -85,7 +155,7 @@ export class AnimationSprite extends PIXI.Sprite implements UpdateObject{
     this.animationFrameId = 0;
     const cacheKey = animation.frames[this.animationFrameId];
     this.texture = PIXI.utils.TextureCache[cacheKey];
-    this.elapsedFrameCount = 0;
+    this.animationFrameCount = 0;
   }
 }
 /******************************************************************************************
@@ -94,6 +164,7 @@ export class AnimationSprite extends PIXI.Sprite implements UpdateObject{
  ******************************************************************************************/
 export class Sprite extends PIXI.Sprite implements UpdateObject {
   protected destroyed: boolean = false;
+  protected objectsToUpdate: UpdateObject[] = [];
   private _image: any;
   private _frameNumber = 0;
   private frameRows: number;
@@ -104,6 +175,29 @@ export class Sprite extends PIXI.Sprite implements UpdateObject {
     super();
     this.width = width;
     this.height = height;
+  }
+  //メインループで更新処理を行うべきオブジェクトの登録
+  protected registerUpdatingObject(object: UpdateObject): void {
+    this.objectsToUpdate.push(object);
+  }
+  
+  //更新処理を行うべきオブジェクトを更新する
+  protected updateRegisteredObjects(delta: number): void {
+    const nextObjectsToUpdate = [];
+    for (let i = 0; i < this.objectsToUpdate.length; i++) {
+      const obj = this.objectsToUpdate[i];
+      if (!obj || obj.isDestroyed()) {
+        continue;
+      }
+      obj.update(delta);
+      nextObjectsToUpdate.push(obj);
+    }
+    this.objectsToUpdate = nextObjectsToUpdate;
+  }
+  //Updateする子要素を追加
+  public addUpdateChild(obj: PIXI.DisplayObject & UpdateObject): void {
+    this.addChild(obj);
+    this.registerUpdatingObject(obj);
   }
   public isDestroyed(): boolean {
     return this.destroyed;
@@ -140,6 +234,7 @@ export class Sprite extends PIXI.Sprite implements UpdateObject {
     this.texture = new PIXI.Texture(this._image, new PIXI.Rectangle(left, top, this.width, this.height));
   }
   public update(dt: number): void {
+    this.updateRegisteredObjects(dt);
     this.elapsedFrameCount++;
   }
 }
@@ -156,11 +251,12 @@ class TileSprite extends Sprite {
   }
   public update(dt: number){
     super.update(dt);
+    if(!this.isAnimation)return;
     if(this.elapsedFrameCount % this.animationData.interval == 0){
       if(++this.animationPatternNumber >= this.animationData.pattern.length){
         this.animationPatternNumber = 0;
       }
-      this.frameNumber = this.animationData.pattern[this.animationPatternNumber]-1;//tiledMapEditorだと-1しておく必要がある
+      this.frameNumber = this.animationData.pattern[this.animationPatternNumber];
     }
   }
 }
@@ -177,35 +273,46 @@ export default interface MapAnimationFrameList {
     interval: number;
   }
 }
-export class TileMap extends PIXI.Container implements UpdateObject {
-  protected destroyed: boolean = false;
+export class TileMap extends Container {
   protected mapLayerData: Array<number[]> = [];//レイヤーごとのマップデータ保存用
-  protected collisionData: Array<number>|Array<boolean>;//当たり判定用
-  protected mapLayerSprites:Array<TileSprite[]> = [];
+  public collisionData: Array<number>|Array<boolean>;//当たり判定用
+  public mapLayerSprites:Array<TileSprite[]> = [];
   protected _image: any;//画像データ
   public tileWidth: number;//タイルの幅
   public tileHeight: number;//タイルの高さ
   public tileColumns: number;//マップの横1列のタイルの数
+  public tileRows: number;
+  public mapWidth: number;//コンテナの大きさは変化するのでマップサイズ用の変数を用意する
+  public mapHeight: number;
+  public layers: Array<Container> = [];//レイヤー
   constructor(){
     super();
   }
-  public isDestroyed(): boolean {
-    return this.destroyed;
-  }
-  public destroy(): void {
-    super.destroy();
-    this.destroyed = true;
+  //Updateする子要素を追加
+  public addUpdateChild(obj: PIXI.DisplayObject & UpdateObject): void {
+    this.addChild(obj);
+    this.registerUpdatingObject(obj);
   }
   /**
    * マップの各サイズをセットする
    */
-  public setSizes(data: {tileWidth: number, tileHeight: number, tileColumns: number}){
+  public setSizes(data: {tileWidth: number, tileHeight: number, tileColumns: number, tileRows: number}){
     this.tileWidth = data.tileWidth;
     this.tileHeight = data.tileHeight;
     this.tileColumns = data.tileColumns;
+    this.tileRows = data.tileRows;
+    this.mapWidth = this.tileColumns * this.tileWidth;
+    this.mapHeight = this.tileRows * this.tileHeight;
   }
   public setCollisionData(data: Array<number>|Array<boolean>){
     this.collisionData = data; 
+  }
+  //表示用の階層を作る(zIndexの代わり)
+  public prepareLayers(num: number){
+    for(let i = 0; i < num; i++){
+      this.layers[i] = new Container();
+      this.addUpdateChild(this.layers[i]);
+    }
   }
   /**
    * 指定のマップレイヤーデータを指定のレイヤーに読み込んでマップを作成する
@@ -213,9 +320,14 @@ export class TileMap extends PIXI.Container implements UpdateObject {
    */
   public createMapLayer(layerNum: number, data: Array<number>){
     this.mapLayerData[layerNum] = data;
+    this.mapHeight = (data.length / this.tileColumns | 0) * this.tileHeight; //マップの高さを算出
     this.mapLayerSprites[layerNum] = [];
     let sprites = this.mapLayerSprites[layerNum];
     for(let i = 0; i < this.mapLayerData[layerNum].length; i++){
+      if(this.mapLayerData[layerNum][i] <= 0){
+        sprites[i] = null;
+        continue;
+      }
       sprites[i] = new TileSprite(this.tileWidth, this.tileHeight);
       sprites[i].image = this._image;
       sprites[i].frameNumber = this.mapLayerData[layerNum][i] - 1;//TiledMapEditorは1から始まっているので1引く
@@ -223,7 +335,7 @@ export class TileMap extends PIXI.Container implements UpdateObject {
       const x = i % this.tileColumns * this.tileWidth;
       const y = (i / this.tileColumns | 0) * this.tileHeight;
       sprites[i].position.set(x, y);
-      this.addChild(sprites[i]);
+      this.layers[layerNum].addUpdateChild(sprites[i]);//指定のレイヤーに追加
     }
   }
   /**
@@ -259,15 +371,9 @@ export class TileMap extends PIXI.Container implements UpdateObject {
    * 更新処理
    */
   public update(dt: number): void {
-    for(let layerNum = 0; layerNum < this.mapLayerSprites.length; layerNum++){
-      for(let i = 0; i < this.mapLayerSprites[layerNum].length; i++){
-        if(!this.mapLayerSprites[layerNum][i].isAnimation)continue;
-        this.mapLayerSprites[layerNum][i].update(dt);
-      }
-    }
+    super.update(dt);
   }
 }
-
 
 /***************************************************************************************************
  * 角丸のボタン

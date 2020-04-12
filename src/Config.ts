@@ -1,9 +1,13 @@
 const Config = {
   ResourceBaseUrl: 'assets/',
   Screen: { //画面サイズなど
-    Width: 640,
-    Height: 900,
+    Width: 512,
+    Height: 768,
     BakcgroundColor: 0x000000,
+  },
+  Display: {
+    Width: 0, 
+    Height: 0,
   },
   Volume: { //音のボリューム。値は0~1
     Bgm: 1, 
