@@ -16,7 +16,7 @@
   "dependencies": {
     "@pixi/filter-pixelate": "^3.0.3",
     "detect-browser": "^4.8.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "pixi.js": "^5.2.0",
     "webfontloader": "^1.6.28"
   },
